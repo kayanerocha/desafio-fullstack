@@ -3,20 +3,41 @@ from db.db import MYSQLConnection
 class Utils:
 
     def verifica_cobertura(id_endereco, id_parceiro):
-        with MYSQLConnection() as (con, cur):
-            cur.execute('SELECT uf FROM tb_viabilidades WHERE id = {};'.format(id_endereco))
-            id_endereco = cur.fetchone()
 
-            cur.execute('SELECT uf_cobertura FROM tb_viabilidades WHERE id = {};'.format(id_endereco))
+        try:
+            with MYSQLConnection() as (con, cur):
+                cur.execute('SELECT uf FROM tb_viabilidades WHERE id = {};'.format(id_endereco))
+                uf_endereco = cur.fetchone()
 
-        
-        if id_endereco is None:
-            return 'Endereço não encontrado.'
-        
+                cur.execute('SELECT uf_cobertura FROM tb_parceiros WHERE id = {};'.format(id_parceiro))
+                uf_parceiro = cur.fetchone()
+            
+            if uf_endereco is None:
+                return 'Endereço não encontrado.'
+            if uf_parceiro is None:
+                return 'Parceiro não encontrado.'        
 
-        print(id_endereco)
-        # if uf_endereco.upper() == uf_parceiro.upper():
-        #     return True
-        # return False
+            if uf_endereco[0].upper() in uf_parceiro[0].upper():
+                return True
+            return 'Este parceiro não atende a este endereço.'
+        except Exception as e:
+            print(f'Erro ao verificar cobertura: {e}')
+            return 'Erro no processamento da requisição.'
+    
+    def retorno_existe(id_endereco, id_parceiro):
 
-Utils.verifica_cobertura(4, 1)
+        try:
+            with MYSQLConnection() as (con, cur):
+                cur.execute('''SELECT id FROM tb_resultados_viabilidades
+                    WHERE id_viabilidade = {} AND id_parceiro = {};'''.format(id_endereco, id_parceiro))
+                data = cur.fetchone()
+            
+            if data is None:
+                return False
+            return 'Este parceiro já respondeu este endereço.'
+        except Exception as e:
+            print(f'Erro ao verificar se existe retorno.')
+            return 'Erro no processamento da requisição.'
+
+
+print(Utils.verifica_cobertura(1, 3))
