@@ -32,7 +32,7 @@ def criar(id_viabilidade, id_parceiro):
         resultado = data['resultado']
 
         parceiro_atende = Utils.verifica_cobertura(id_viabilidade, id_parceiro)
-        retorno_existe = Utils.retorno_existe(id_viabilidade, id_parceiro)
+        retorno_existe = Utils.parceiro_repondeu(id_viabilidade, id_parceiro)
 
         message = ''
         if parceiro_atende is not True:
@@ -52,6 +52,35 @@ def criar(id_viabilidade, id_parceiro):
                 content_type='application/json')
         else:
             return Response(response=json.dumps({'data': None, 'status': 200, 'message': message}),
+                status=200,
+                content_type='application/json')
+    except Exception as e:
+        print(f'Erro ao salvar resultado: {e}')
+        return Response(response=json.dumps({'data': None, 'status': 500, 'message': 'Erro no processamento da requisição.'}),
+            status=500,
+            content_type='application/json')
+    
+@app.route('/atualizar/<id_retorno>', methods=['PUT'])
+def atualizar(id_retorno):
+    try:
+        data = request.get_json()
+        resultado = data['resultado']
+
+        retorno_existe = Utils.retorno_existe(id_retorno)
+
+        if retorno_existe is True:
+            with MYSQLConnection() as (con, cur):
+                query = '''UPDATE tb_resultados_viabilidades
+                SET resultado = '{}'
+                WHERE id = {};'''.format(resultado, id_retorno)
+                cur.execute(query)
+                con.commit()
+
+            return Response(response=json.dumps({'data': None, 'status': 200, 'message': 'Resultado atualizado com sucesso.'}),
+                status=200,
+                content_type='application/json')
+        else:
+            return Response(response=json.dumps({'data': None, 'status': 200, 'message': retorno_existe}),
                 status=200,
                 content_type='application/json')
     except Exception as e:
