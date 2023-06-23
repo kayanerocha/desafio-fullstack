@@ -6,8 +6,24 @@ import json
 
 @app.route('/')
 def index():
-    with MYSQLConnection() as (con, cur):
-        query = ''''''
+    try:
+        with MYSQLConnection() as (con, cur):
+            query = '''SELECT a.id, concat(b.logradouro, ', ', b.numero, ' - ', b.bairro, ', ', b.cidade, ' - ', b.uf) AS endereco,
+                a.resultado, c.nome AS nome_parceiro
+                FROM tb_resultados_viabilidades a
+                LEFT JOIN tb_viabilidades b ON b.id = a.id_viabilidade
+                LEFT JOIN tb_parceiros c ON c.id = a.id_parceiro;'''
+            cur.execute(query)
+            data = cur.fetchall()
+
+        return Response(response=json.dumps({'data': data, 'status': 200, 'message': ''}),
+            status=200,
+            content_type='application/json')
+    except Exception as e:
+        print(f'Erro ao buscar os resultado de viabilidades: {e}')
+        return Response(response=json.dumps({'data': None, 'status': 500, 'message': 'Erro no processamento da requisição.'}),
+            status=500,
+            content_type='application/json')
 
 @app.route('/enviar-resultado/<id_viabilidade>/<id_parceiro>', methods=['POST'])
 def criar(id_viabilidade, id_parceiro):
@@ -41,6 +57,6 @@ def criar(id_viabilidade, id_parceiro):
     except Exception as e:
         print(f'Erro ao salvar resultado: {e}')
         return Response(response=json.dumps({'data': None, 'status': 500, 'message': 'Erro no processamento da requisição.'}),
-                status=500,
-                content_type='application/json')
+            status=500,
+            content_type='application/json')
 
