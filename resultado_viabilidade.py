@@ -89,3 +89,27 @@ def atualizar(id_retorno):
             status=500,
             content_type='application/json')
 
+@app.route('/deletar/<id_retorno>', methods=['DELETE'])
+def deletar(id_retorno):
+    try:
+        retorno_existe = Utils.retorno_existe(id_retorno)
+
+        if retorno_existe is True:
+            with MYSQLConnection() as (con, cur):
+                query = 'DELETE FROM tb_resultados_viabilidades WHERE id = {};'.format(id_retorno)
+                cur.execute(query)
+                con.commit()
+
+            return Response(response=json.dumps({'data': None, 'status': 200, 'message': 'Resultado deletado com sucesso.'}),
+                status=200,
+                content_type='application/json')
+        else:
+            return Response(response=json.dumps({'data': None, 'status': 200, 'message': retorno_existe}),
+                status=200,
+                content_type='application/json')
+    except Exception as e:
+        print(f'Erro ao salvar resultado: {e}')
+        return Response(response=json.dumps({'data': None, 'status': 500, 'message': 'Erro no processamento da requisição.'}),
+            status=500,
+            content_type='application/json')
+    

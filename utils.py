@@ -54,6 +54,3 @@ class Utils:
             print(f'Erro ao verificar se existe retorno: {e}')
             return 'Erro no processamento da requisição.'
 
-
-
-print(Utils.verifica_cobertura(1, 3))
