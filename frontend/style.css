@@ -1,0 +1,14 @@
+body {
+    background-color: #E1ECC8;
+    margin: 0px
+}
+
+h1 {
+    font-size: 2em;
+    text-align: center;
+}
+
+.resultados {
+    margin: 0 auto;
+    width: 800px;
+}
