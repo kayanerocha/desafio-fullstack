@@ -18,12 +18,15 @@ def index():
 
         return Response(response=json.dumps({'data': data, 'status': 200, 'message': ''}),
             status=200,
-            content_type='application/json')
+            content_type='application/json',
+            headers={'Access-Control-Allow-Origin': '*'})
     except Exception as e:
         print(f'Erro ao buscar os resultado de viabilidades: {e}')
-        return Response(response=json.dumps({'data': None, 'status': 500, 'message': 'Erro no processamento da requisição.'}),
+        return Response(response=json.dumps({'data': None, 'status': 500,
+            'message': 'Erro no processamento da requisição.'}),
             status=500,
-            content_type='application/json')
+            content_type='application/json',
+            headers={'Access-Control-Allow-Origin': '*'})
 
 @app.route('/enviar-resultado/<id_viabilidade>/<id_parceiro>', methods=['POST'])
 def criar(id_viabilidade, id_parceiro):
