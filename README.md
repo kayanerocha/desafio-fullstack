@@ -160,4 +160,4 @@ Utilizei HTMl, CSS e JavaScript para consumir a API.
 
 **Back-end:** Python, Flask, SQL, MySQL e MySQL Workbench
 
-Flask foi escolhido por ser fácil e rápido de configurar, e é recomendado para a criação de aplicações minimalistas, como é o caso desse desafio.
+Flask foi escolhido por ser fácil e rápido de configurar, além de ser recomendado para a criação de aplicações minimalistas, como é o caso desse desafio.
