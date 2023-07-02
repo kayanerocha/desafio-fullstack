@@ -4,7 +4,7 @@ from flask_bcrypt import Bcrypt
 
 # __name__: faz referência a esse próprio arquivo
 app = Flask(__name__)
-app.config.from_pyfile('./config.py')
+# app.config.from_pyfile('./config.py')
 
 # Instancia o banco do SQLAlchemy que faz a ponte com o banco de dados real
 # db = SQLAlchemy(app)
