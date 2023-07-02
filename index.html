@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Viabilidades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+    <style>
+        body {
+            background-color: #E1ECC8;
+            margin: 0px
+        }
+
+        h1 {
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .resultados {
+            margin: 0 auto;
+            width: 800px;
+        }
+    </style>
+
+    <h1>Resultados de Viabilidades</h1>
+    <div class="resultados">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Endereço</th>
+                    <th scope="col">Resultado</th>
+                    <th scope="col">Parceiro</th>
+                </tr>
+            </thead>
+            <tbody id="resultados">
+    
+            </tbody>
+        </table>
+    </div>     
+
+    <script>
+        const resultados = document.getElementById('resultados');
+
+        async function logJSONData() {
+            const response = await fetch('http://127.0.0.1:5000/');
+            const jsonData = await response.json();
+
+            for (var i = 0; i < jsonData.data.length; i++) {
+                console.log(jsonData.data[i]);
+                const tr = document.createElement('tr');
+                const id = document.createElement('td');
+                const endereco = document.createElement('td');
+                const resultado = document.createElement('td');
+                const parceiro = document.createElement('td');
+
+                resultados.appendChild(tr);
+                tr.appendChild(id);
+                tr.appendChild(endereco);
+                tr.appendChild(resultado);
+                tr.appendChild(parceiro);
+
+                id.textContent = jsonData.data[i].id
+                endereco.textContent = jsonData.data[i].endereco
+                resultado.textContent = jsonData.data[i].resultado
+                parceiro.textContent = jsonData.data[i].nome_parceiro
+
+                id.scope = 'row';
+            }
+        }
+        logJSONData()
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    
+</body>
+</html>
